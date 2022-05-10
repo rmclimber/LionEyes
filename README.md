@@ -30,13 +30,22 @@ platform [iNaturalist](https://www.inaturalist.org/), which allows users
 worldwide to upload photographs and audio recordings of organisms in the wild. 
 One can find observations from every macroscopic kingdom of life. The platform
 has its own impressive image classification technology, and I commend it to the
-biologically-interested reader. (If you'd like to explore my own activity on
-iNaturalist, [here is my profile](https://www.inaturalist.org/people/tkatka).)
+biologically-interested reader[^1]. 
 
 iNaturalist observations are available for download via the Global
 Biodiversity Information Facility's [iNaturalist dataset](https://www.gbif.org/dataset/50c9509d-22c7-4a22-a47d-8c48425ef4a7).
 
 ### Phase 1.2: data acquisition
+
+Naturally, I need two types of data: images of cougars and images of
+not-cougars. 
+
+### Phase 1.3: data preparation
+
+Unluckily for my purposes, the iNaturalist observations include not only images
+of cougars, but images of cougar spoor: scat, tracks, etc. At this stage in the
+project, I have little interest in scat classification, so I need to find a way
+to tag all \~5k images as containing an animal or containing spoor. 
 
 ## Phase 2: building and training the model
 ## Phase 3: building a GUI for practical use
@@ -58,3 +67,5 @@ everything:
 
 ## Citations
 - iNaturalist contributors, iNaturalist (2022). iNaturalist Research-grade Observations. iNaturalist.org. Occurrence dataset https://doi.org/10.15468/ab3s5x accessed via GBIF.org on 2022-05-10.
+
+[^1]: If you'd like to explore my own activity on iNaturalist, [here is my profile](https://www.inaturalist.org/people/tkatka).

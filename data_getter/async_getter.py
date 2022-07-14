@@ -24,7 +24,7 @@ class AsyncGetter(object):
 
     async def download_site(self, client, url):
         '''
-        Downloads a single binary file from the url..
+        Downloads a single binary file from the url and writes it to disk.
 
         :param client:
         :param url:
@@ -37,6 +37,11 @@ class AsyncGetter(object):
                     await file.write(data)
 
     async def download_all_sites(self):
+        '''
+        Builds and executes the tasync task list for the data downloads.
+
+        :return:
+        '''
         client = httpx.Client()
         async with client:
             tasks = []

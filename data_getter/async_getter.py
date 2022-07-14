@@ -22,7 +22,13 @@ class AsyncGetter(object):
         pass
 
     async def download_all_sites(self):
-        pass
+        client = httpx.Client()
+        async with client:
+            tasks = []
+            for url in self.sites:
+                task = asyncio.ensure_future(self.download_site(client, url))
+                tasks.append(task)
+            await asyncio.gather(*tasks, return_exceptions=True)
 
     def run(self):
         pass

@@ -34,15 +34,15 @@ class AsyncGetter(object):
         :return:
         '''
         print('Starting download for: {}'.format(url))
-        with client.stream(url) as response:
-            print(response.status_code)
-            filename = self.make_filename(url=url)
-            print(filename)
-            async with aiofiles.open(filename, mode='w') as file:
-                print('file opened')
-                async for data in response.content.iter_raw():
-                    await file.write(data)
-                print('finished writing')
+        response = client.stream(url)
+        print(response.status_code)
+        filename = self.make_filename(url=url)
+        print(filename)
+        async with aiofiles.open(filename, mode='w') as file:
+            print('file opened')
+            async for data in response.content.iter_raw():
+                await file.write(data)
+            print('finished writing')
 
     async def download_all_sites(self):
         '''

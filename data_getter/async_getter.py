@@ -18,9 +18,12 @@ import urllib
 import aiofiles
 
 class AsyncGetter(object):
-    def __int__(self, base_path: str='', sites: list=None):
+    def __init__(self, base_path: str='', sites: list=None):
         self.sites = sites
         self.base_path = base_path
+
+        if not os.path.exists(self.base_path):
+            os.mkdir(self.base_path)
 
     async def download_site(self, client, url):
         '''
@@ -30,11 +33,16 @@ class AsyncGetter(object):
         :param url:
         :return:
         '''
-        async with client.get(url) as response:
+        print('Starting download for: {}'.format(url))
+        with client.stream(url) as response:
+            print(response.status_code)
             filename = self.make_filename(url=url)
+            print(filename)
             async with aiofiles.open(filename, mode='w') as file:
+                print('file opened')
                 async for data in response.content.iter_raw():
                     await file.write(data)
+                print('finished writing')
 
     async def download_all_sites(self):
         '''
@@ -42,16 +50,16 @@ class AsyncGetter(object):
 
         :return:
         '''
-        client = httpx.Client()
-        async with client:
+        with httpx.Client() as client:
             tasks = []
             for url in self.sites:
                 task = asyncio.ensure_future(self.download_site(client, url))
                 tasks.append(task)
             await asyncio.gather(*tasks, return_exceptions=True)
+            print('Finished downloading')
 
     def run(self):
-        pass
+        asyncio.run(self.download_all_sites())
 
     def make_filename(self, url: str=''):
         '''
@@ -65,6 +73,13 @@ class AsyncGetter(object):
             raise ValueError("Invalid URL: please enter a URL with a valid filename")
         url_path = urllib.parse.urlparse(url).path
         filename = os.path.basename(url_path)
+        print(filename)
         if not filename:
             raise ValueError("Invalid URL: please enter a URL with a valid filename")
         return self.base_path + filename
+
+
+if __name__ == '__main__':
+    sites = ['https://www.jython.org/index.html'] * 30
+    getter = AsyncGetter(base_path='test//', sites=sites)
+    getter.run()

@@ -34,15 +34,16 @@ class AsyncGetter(object):
         :return:
         '''
         print('Starting download for: {}'.format(url))
-        response = client.get(url)
-        print(response.status_code)
+        # response = client.get(url)
         filename = self.make_filename(url=url)
         print(filename)
         async with aiofiles.open(filename, mode='w') as file:
             print('file opened')
-            async for data in response.content.iter_raw():
-                await file.write(data)
-            print('finished writing')
+            with httpx.stream('GET', url) as response:
+                print(response.status_code)
+                async for data in response.iter_raw():
+                    await file.write(data)
+                print('finished writing')
 
     async def download_all_sites(self):
         '''

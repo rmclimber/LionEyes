@@ -8,7 +8,7 @@ References (for Rick):
 https://realpython.com/python-concurrency/
 https://codereview.stackexchange.com/questions/259112/async-download-of-files
 https://www.twilio.com/blog/working-with-files-asynchronously-in-python-using-aiofiles-and-asyncio
-
+https://pypi.org/project/aiofiles/
 '''
 
 import asyncio
@@ -34,7 +34,7 @@ class AsyncGetter(object):
         :return:
         '''
         print('Starting download for: {}'.format(url))
-        response = client.stream(url)
+        response = client.get(url)
         print(response.status_code)
         filename = self.make_filename(url=url)
         print(filename)

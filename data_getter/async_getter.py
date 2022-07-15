@@ -9,6 +9,7 @@ https://realpython.com/python-concurrency/
 https://codereview.stackexchange.com/questions/259112/async-download-of-files
 https://www.twilio.com/blog/working-with-files-asynchronously-in-python-using-aiofiles-and-asyncio
 https://pypi.org/project/aiofiles/
+https://zetcode.com/python/httpx/
 '''
 
 import asyncio
@@ -39,7 +40,7 @@ class AsyncGetter(object):
         print(filename)
         async with aiofiles.open(filename, mode='w') as file:
             print('file opened')
-            with httpx.stream('GET', url) as response:
+            async with httpx.stream('GET', url) as response:
                 print(response.status_code)
                 async for data in response.iter_raw():
                     await file.write(data)

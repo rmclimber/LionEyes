@@ -40,7 +40,7 @@ class AsyncGetter(object):
         print(filename)
         async with aiofiles.open(filename, mode='w') as file:
             print('file opened')
-            async with httpx.stream('GET', url) as response:
+            with client.get(url) as response:
                 print(response.status_code)
                 async for data in response.iter_raw():
                     await file.write(data)

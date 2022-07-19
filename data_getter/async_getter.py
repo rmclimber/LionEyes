@@ -40,11 +40,11 @@ class AsyncGetter(object):
         print(filename)
         async with aiofiles.open(filename, mode='w') as file:
             print('file opened')
-            with client.get(url) as response:
-                print(response.status_code)
-                async for data in response.iter_raw():
-                    await file.write(data)
-                print('finished writing')
+            response = await client.get(url)
+            print(response.status_code)
+            async for data in response.iter_raw():
+                await file.write(data)
+            print('finished writing')
 
     async def download_all_sites(self):
         '''
@@ -52,7 +52,7 @@ class AsyncGetter(object):
 
         :return:
         '''
-        with httpx.Client() as client:
+        async with httpx.AsyncClient() as client:
             tasks = []
             for url in self.sites:
                 task = asyncio.ensure_future(self.download_site(client, url))

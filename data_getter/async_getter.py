@@ -40,11 +40,14 @@ class AsyncGetter(object):
         print(filename)
         async with aiofiles.open(filename, mode='w') as file:
             print('file opened')
-            response = await client.get(url)
-            print(response.status_code)
-            async for data in response.iter_raw():
-                await file.write(data)
-            print('finished writing')
+            # response = await client.get(url)
+            async with client.stream('GET', url) as response:
+                print(response.status_code)
+                async for data in response.aiter_text():
+                    print('Downloading: {}'.format(data))
+                    await file.write(data)
+                await file.close()
+                print('finished writing')
 
     async def download_all_sites(self):
         '''

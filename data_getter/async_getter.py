@@ -10,6 +10,13 @@ https://codereview.stackexchange.com/questions/259112/async-download-of-files
 https://www.twilio.com/blog/working-with-files-asynchronously-in-python-using-aiofiles-and-asyncio
 https://pypi.org/project/aiofiles/
 https://zetcode.com/python/httpx/
+https://docs.python.org/3/library/asyncio-stream.html
+https://www.python-httpx.org/async/
+https://www.python-httpx.org/advanced/
+https://github.com/Tinche/aiofiles
+https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-3.html
+https://stackoverflow.com/questions/58804285/asynchronous-download-of-files
+https://codereview.stackexchange.com/questions/259112/async-download-of-files
 '''
 
 import asyncio
@@ -38,12 +45,12 @@ class AsyncGetter(object):
         # response = client.get(url)
         filename = self.make_filename(url=url)
         print(filename)
-        async with aiofiles.open(filename, mode='w') as file:
+        async with aiofiles.open(filename, mode='wb') as file:
             print('file opened')
             # response = await client.get(url)
             async with client.stream('GET', url) as response:
                 print(response.status_code)
-                async for data in response.aiter_text():
+                async for data in response.aiter_bytes():
                     print('Downloading: {}'.format(data))
                     await file.write(data)
                 await file.close()

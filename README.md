@@ -1,5 +1,6 @@
 # LionEyes
 
+## Introduction
 The genesis of this project was my sister's face-to-face encounter with a cougar
 outside her home in the Sierra Nevada foothills. (The cougar was killing two of
 her baby goats.) She was unhurt, but the cougar was never successfully found. 
@@ -23,7 +24,7 @@ work: the approach taken, successes and failures, etc.
 
 ## Phase 1: data acquisition and preparation (current phase)
 
-### Phase 1.1: data source selection
+### Phase 1.1: data source selection (complete)
 
 For my data, I intend to use cougar observations from the citizen science
 platform [iNaturalist](https://www.inaturalist.org/), which allows users 
@@ -35,10 +36,11 @@ biologically-interested reader[^1].
 iNaturalist observations are available for download via the Global
 Biodiversity Information Facility's [iNaturalist dataset](https://www.gbif.org/dataset/50c9509d-22c7-4a22-a47d-8c48425ef4a7).
 
-### Phase 1.2: data acquisition
+### Phase 1.2: data acquisition (current phase)
 
 Naturally, I need two types of data: images of cougars and images of
-not-cougars. 
+not-cougars. For the time being, my negative examples will primarily be other
+medium-to-large mammals found locally: deer, foxes, bobcats, bears, and coyotes.
 
 ### Phase 1.3: data preparation
 

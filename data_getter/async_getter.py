@@ -26,9 +26,10 @@ import urllib
 import aiofiles
 
 class AsyncGetter(object):
-    def __init__(self, base_path: str='', sites: list=None):
+    def __init__(self, base_path: str='', sites: list=None, verbose=False):
         self.sites = sites
         self.base_path = base_path
+        self.verbose = verbose
 
         if not os.path.exists(self.base_path):
             os.mkdir(self.base_path)
@@ -42,19 +43,15 @@ class AsyncGetter(object):
         :return:
         '''
         print('Starting download for: {}'.format(url))
-        # response = client.get(url)
         filename = self.make_filename(url=url)
-        print(filename)
         async with aiofiles.open(filename, mode='wb') as file:
-            print('file opened')
-            # response = await client.get(url)
+            print(f'File opened: {filename} ({id(file)})')
             async with client.stream('GET', url) as response:
-                print(response.status_code)
                 async for data in response.aiter_bytes():
-                    print('Downloading: {}'.format(data))
+                    # TODO: progress tracker based on file length?
                     await file.write(data)
                 await file.close()
-                print('finished writing')
+                print(f'Finished writing: {filename} ({id(file)})')
 
     async def download_all_sites(self):
         '''
@@ -85,7 +82,6 @@ class AsyncGetter(object):
             raise ValueError("Invalid URL: please enter a URL with a valid filename")
         url_path = urllib.parse.urlparse(url).path
         filename = os.path.basename(url_path)
-        print(filename)
         if not filename:
             raise ValueError("Invalid URL: please enter a URL with a valid filename")
         return self.base_path + filename

@@ -65,7 +65,6 @@ class AsyncGetter(object):
                 task = asyncio.ensure_future(self.download_site(client, url))
                 tasks.append(task)
             await asyncio.gather(*tasks, return_exceptions=True)
-            print('Finished downloading')
 
     def run(self):
         asyncio.run(self.download_all_sites())
@@ -79,7 +78,7 @@ class AsyncGetter(object):
         '''
 
         if not url:
-            raise ValueError("Invalid URL: please enter a URL with a valid filename")
+            raise ValueError("Empty URL")
         url_path = urllib.parse.urlparse(url).path
         filename = os.path.basename(url_path)
         if not filename:

@@ -17,6 +17,7 @@ https://github.com/Tinche/aiofiles
 https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-3.html
 https://stackoverflow.com/questions/58804285/asynchronous-download-of-files
 https://codereview.stackexchange.com/questions/259112/async-download-of-files
+https://www.python-httpx.org/compatibility/
 '''
 
 import asyncio

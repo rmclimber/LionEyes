@@ -18,6 +18,8 @@ from async_getter import AsyncGetter
 
 class GBIFGetter(AsyncGetter):
     TAB = '\t'
+    COL_ID = 'references'
+    COL_URL = 'identifier'
 
     def __init__(self, download_file=None):
         super().__init__()
@@ -29,9 +31,14 @@ class GBIFGetter(AsyncGetter):
             print("No filename")
             return None
 
+        # open TSV from GBIF
         df = pd.read_csv(download_file, sep=self.TAB)
 
-        # TODO: create unique identifiers (from iNat column) for ID.jpg
-        # TODO: take identifier column as URL and references column final portion as filename basis
+        # create unique identifiers from referenes column values
+        ids = list(df[self.COL_ID])
+        id_codes = [id.split('/')[-1] for id in ids]
+
+        # create dictionary with identifiers as key and URL as value
+        return dict(zip(id_codes, df[self.COL_URL]))
 
 

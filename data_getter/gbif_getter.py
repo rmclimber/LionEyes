@@ -21,8 +21,17 @@ class GBIFGetter(AsyncGetter):
     COL_ID = 'references'
     COL_URL = 'identifier'
 
-    def __init__(self, download_file=None):
-        super().__init__()
+    def __init__(self, base_path: str='', download_file=None):
+        # pass base path to base class
+        super(GBIFGetter, self).__init__(base_path=base_path)
+        self.download_file = download_file
+        self.files = self.parse_download_file(self.download_file)
+
+    def set_download_files(self, download_file: str=None):
+        if download_file is None:
+            print("No filename")
+            return None
+
         self.download_file = download_file
         self.files = self.parse_download_file(self.download_file)
 
@@ -40,5 +49,24 @@ class GBIFGetter(AsyncGetter):
 
         # create dictionary with identifiers as key and URL as value
         return dict(zip(id_codes, df[self.COL_URL]))
+
+    def make_filename(self, identifier, url):
+        '''
+        Builds a new filename based on the iNaturalist identifier, the base
+        path, and the file extension.
+
+        :param identifier: unique iNaturalist identifier for picture
+        :param url: resource location
+        :return: new filename
+        '''
+
+        if not url:
+            raise ValueError("Empty URL")
+        url_path = urllib.parse.urlsplit(url).path
+        filename = identifier
+        _, file_extension = os.path.splitext(url_path)
+        filename += file_extension
+        return self.base_path + filename
+
 
 

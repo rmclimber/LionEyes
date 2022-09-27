@@ -27,15 +27,15 @@ import urllib
 import aiofiles
 
 class AsyncGetter(object):
-    def __init__(self, base_path: str='', sites: list=None, verbose=False):
-        self.sites = sites
+    def __init__(self, base_path: str='', targets: list=None, verbose=False):
+        self.targets = targets
         self.base_path = base_path
         self.verbose = verbose
 
         if not os.path.exists(self.base_path):
             os.mkdir(self.base_path)
 
-    async def download_site(self, client, url):
+    async def download_site(self, client, **kwargs):
         '''
         Downloads a single binary file from the url and writes it to disk.
 
@@ -43,8 +43,9 @@ class AsyncGetter(object):
         :param url:
         :return:
         '''
+        url = kwargs['url']
         print('Starting download for: {}'.format(url))
-        filename = self.make_filename(url=url)
+        filename = self.make_filename(**kwargs)
         async with aiofiles.open(filename, mode='wb') as file:
             print(f'File opened: {filename} ({id(file)})')
             async with client.stream('GET', url) as response:
@@ -54,16 +55,18 @@ class AsyncGetter(object):
                 await file.close()
                 print(f'Finished writing: {filename} ({id(file)})')
 
-    async def download_all_sites(self):
+    async def download_all_sites(self, targets=None):
         '''
         Builds and executes the tasync task list for the data downloads.
 
         :return:
         '''
+        if targets is None:
+            targets = self.targets
         async with httpx.AsyncClient() as client:
             tasks = []
-            for url in self.sites:
-                task = asyncio.ensure_future(self.download_site(client, url))
+            for dl_params in targets: # assumes a list of dictionaries for kwargs
+                task = asyncio.ensure_future(self.download_site(client, **dl_params))
                 tasks.append(task)
             await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -88,6 +91,6 @@ class AsyncGetter(object):
 
 
 if __name__ == '__main__':
-    sites = ['https://www.jython.org/index.html'] * 30
+    sites = [{'url': 'https://www.jython.org/index.html'}] * 30
     getter = AsyncGetter(base_path='test//', sites=sites)
     getter.run()

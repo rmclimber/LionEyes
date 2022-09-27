@@ -70,8 +70,8 @@ class AsyncGetter(object):
                 tasks.append(task)
             await asyncio.gather(*tasks, return_exceptions=True)
 
-    def run(self):
-        asyncio.run(self.download_all_sites())
+    def run(self, targets=None):
+        asyncio.run(self.download_all_sites(targets=targets))
 
     def make_filename(self, url: str=''):
         '''

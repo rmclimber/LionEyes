@@ -68,5 +68,13 @@ class GBIFGetter(AsyncGetter):
         filename += file_extension
         return self.base_path + filename
 
+    def get_gbif_files(self):
+        if self.files is None:
+            print('Files not specified')
+            return None
+
+        targets = [{'identifier': k, 'url': v} for k, v in self.files.items()]
+        self.run(targets=targets)
+
 
 

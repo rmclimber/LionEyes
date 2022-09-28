@@ -9,6 +9,8 @@ References (for Rick):
 '''
 
 import asyncio
+import sys
+
 import httpx
 import os
 import urllib
@@ -40,10 +42,12 @@ class GBIFGetter(AsyncGetter):
             print("No filename")
             return None
 
+        print(f'Parsing GBIF download file: {download_file}')
+
         # open TSV from GBIF
         df = pd.read_csv(download_file, sep=self.TAB)
 
-        # create unique identifiers from referenes column values
+        # create unique identifiers from references column values
         ids = list(df[self.COL_ID])
         id_codes = [id.split('/')[-1] for id in ids]
 
@@ -77,4 +81,8 @@ class GBIFGetter(AsyncGetter):
         self.run(targets=targets)
 
 
-
+if __name__ == '__main__':
+    args = sys.argv
+    filename = args[1]
+    getter = GBIFGetter(base_path='../data/img/', download_file=filename)
+    getter.get_gbif_files()

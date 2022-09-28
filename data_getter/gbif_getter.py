@@ -49,7 +49,7 @@ class GBIFGetter(AsyncGetter):
 
         # create unique identifiers from references column values
         ids = list(df[self.COL_ID])
-        id_codes = [id.split('/')[-1] for id in ids]
+        id_codes = [str(id).split('/')[-1] for id in ids]
 
         # create dictionary with identifiers as key and URL as value
         return dict(zip(id_codes, df[self.COL_URL]))

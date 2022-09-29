@@ -30,6 +30,11 @@ class GBIFGetter(AsyncGetter):
         self.files = self.parse_download_file(self.download_file)
 
     def set_download_files(self, download_file: str=None):
+        """
+        Can be called when a download file is not set in constructor.
+        :param download_file: assumed to be TSV.
+        :return:
+        """
         if download_file is None:
             print("No filename")
             return None
@@ -38,6 +43,12 @@ class GBIFGetter(AsyncGetter):
         self.files = self.parse_download_file(self.download_file)
 
     def parse_download_file(self, download_file: str=None):
+        """
+        Pulls the metadata necessary to download image data out of a GBIF TSV.
+
+        :param download_file:
+        :return:
+        """
         if download_file is None:
             print("No filename")
             return None
@@ -73,6 +84,10 @@ class GBIFGetter(AsyncGetter):
         return self.base_path + filename
 
     def get_gbif_files(self):
+        """
+        Runner for the ascynio download method in ASyncGetter.
+        :return:
+        """
         if self.files is None:
             print('Files not specified')
             return None

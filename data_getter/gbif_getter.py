@@ -95,9 +95,20 @@ class GBIFGetter(AsyncGetter):
         targets = [{'identifier': k, 'url': v} for k, v in self.files.items()]
         self.run(targets=targets)
 
+    def make_metadata_file(self):
+        # open TSV from GBIF
+        df = pd.read_csv(self.download_file, sep=self.TAB)
+        df = df.loc[df['type'] == 'StillImage', :]
+        # TODO: drop unneeded columns; save to CSV
+
 
 if __name__ == '__main__':
     args = sys.argv
-    filename = args[1]
+    command = args[2]
+    filename = args[2]
     getter = GBIFGetter(base_path='../data/img/', download_file=filename)
-    getter.get_gbif_files()
+
+    if command == 'get':
+        getter.get_gbif_files()
+    elif command == 'parse':
+        getter.make_metadata_file()

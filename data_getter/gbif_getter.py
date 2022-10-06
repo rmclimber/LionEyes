@@ -22,6 +22,7 @@ class GBIFGetter(AsyncGetter):
     TAB = '\t'
     COL_ID = 'references'
     COL_URL = 'identifier'
+    COL_TYPE = 'type'
 
     def __init__(self, base_path: str='', download_file=None):
         # pass base path to base class
@@ -95,20 +96,26 @@ class GBIFGetter(AsyncGetter):
         targets = [{'identifier': k, 'url': v} for k, v in self.files.items()]
         self.run(targets=targets)
 
-    def make_metadata_file(self):
+    def make_metadata_file(self, filename):
         # open TSV from GBIF
         df = pd.read_csv(self.download_file, sep=self.TAB)
         df = df.loc[df['type'] == 'StillImage', :]
-        # TODO: drop unneeded columns; save to CSV
+        cols = [self.COL_TYPE, self.COL_ID, self.COL_URL]
+        df = df.loc[:, cols]
+        df.to_csv(filename, index=False)
 
 
 if __name__ == '__main__':
     args = sys.argv
-    command = args[2]
-    filename = args[2]
-    getter = GBIFGetter(base_path='../data/img/', download_file=filename)
+    command = args[1]
+    input_filename = args[2]
+    if len(args) > 2:
+        output_filename = args[3]
+    else:
+        output_filename = None
+    getter = GBIFGetter(base_path='../data/img/', download_file=input_filename)
 
     if command == 'get':
         getter.get_gbif_files()
     elif command == 'parse':
-        getter.make_metadata_file()
+        getter.make_metadata_file(output_filename)

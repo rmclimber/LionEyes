@@ -20,9 +20,13 @@ from async_getter import AsyncGetter
 
 class GBIFGetter(AsyncGetter):
     TAB = '\t'
-    COL_ID = 'references'
-    COL_URL = 'identifier'
+    COL_ORIG_ID = 'references'
+    COL_ORIG_URL = 'identifier'
     COL_TYPE = 'type'
+    COL_CSV_IMG_URL = 'Image URL'
+    COL_CSV_OBS_URL = 'Observation URL' # stick 'references' here
+    COL_CSV_ID = 'ID'
+    COL_CSV_CLASS = 'Class'
 
     def __init__(self, base_path: str='', download_file=None):
         # pass base path to base class
@@ -60,11 +64,11 @@ class GBIFGetter(AsyncGetter):
         df = pd.read_csv(download_file, sep=self.TAB)
 
         # create unique identifiers from references column values
-        ids = list(df[self.COL_ID])
+        ids = list(df[self.COL_ORIG_ID])
         id_codes = [str(id).split('/')[-1] for id in ids]
 
         # create dictionary with identifiers as key and URL as value
-        return dict(zip(id_codes, df[self.COL_URL]))
+        return dict(zip(id_codes, df[self.COL_ORIG_URL]))
 
     def make_filename(self, identifier, url):
         '''
@@ -100,8 +104,14 @@ class GBIFGetter(AsyncGetter):
         # open TSV from GBIF
         df = pd.read_csv(self.download_file, sep=self.TAB)
         df = df.loc[df['type'] == 'StillImage', :]
-        cols = [self.COL_TYPE, self.COL_ID, self.COL_URL]
+
+        ids = list(df[self.COL_ORIG_ID])
+        id_codes = [str(id).split('/')[-1] for id in ids]
+        cols = [self.COL_TYPE, self.COL_ORIG_ID, self.COL_ORIG_URL]
         df = df.loc[:, cols]
+        df.columns = [self.COL_TYPE, self.COL_CSV_OBS_URL, self.COL_CSV_IMG_URL]
+        df[self.COL_CSV_ID] = id_codes
+        df[self.COL_CSV_CLASS] = ''
         df.to_csv(filename, index=False)
 
 
